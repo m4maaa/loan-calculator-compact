@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Loan Compact</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Loan Compact">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
@@ -16,11 +18,14 @@ body {
 }
 
 .container {
-  width:360px;
-  margin:auto;
+  width: 100%;
+  max-width: 420px;
+  margin: auto;
+  padding: 10px;
 }
 
 .box {
+  border-radius: 10px;
   border:1px solid #333;
   margin:10px 0;
   padding:10px;
@@ -41,8 +46,8 @@ body {
 
 input, select {
   width:100%;
-  padding:6px;
-  font-size:14px;
+  padding:10px;
+  font-size:16px;
 }
 
 .row.result-row {
@@ -84,9 +89,14 @@ input, select {
 }
 
 button {
-  width:48%;
-  padding:8px;
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
   margin-top:10px;
+}
+  
+.row:last-child {
+  gap: 10px;
 }
 
 /* mobile */
