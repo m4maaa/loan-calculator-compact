@@ -5,23 +5,62 @@
 <title>Loan Compact</title>
 
 <style>
-body { font-family: sans-serif; background:#f5f5f5; }
-.container { width:360px; margin:auto; }
-.box { border:1px solid #333; margin:10px 0; padding:10px; background:#fff; }
-.title { text-align:center; font-weight:bold; margin-bottom:8px; }
+body {
+  font-family: sans-serif;
+  background:#f5f5f5;
+}
 
-.row { display:flex; gap:5px; margin-bottom:5px; }
+.container {
+  width:360px;
+  margin:auto;
+}
+
+.box {
+  border:1px solid #333;
+  margin:10px 0;
+  padding:10px;
+  background:#fff;
+}
+
+.title {
+  text-align:center;
+  font-weight:bold;
+  margin-bottom:8px;
+}
+
+.row {
+  display:flex;
+  gap:5px;
+  margin-bottom:5px;
+}
+
 input, select {
   flex:1;
   padding:6px;
   font-size:14px;
+  width: 100%;
 }
+
+.row.result-row {
+  display:flex;
+  gap:5px;
+}
+
 .result {
+  flex:1;
   display:flex;
   justify-content:space-between;
+  align-items:center;
   border:1px solid #ccc;
-  padding:5px;
-  margin-top:5px;
+  padding:6px;
+  font-size:14px;
+}
+
+.result span {
+  font-weight:bold;
+}
+  
+  box-sizing: border-box;
 }
 .pass { background:#8fda94; }
 .fail { background:#f3b4a6; }
@@ -48,23 +87,20 @@ button {
 
   <!-- เงินเดือน + เดือน -->
   <div class="row">
-    <input type="text" id="salary" placeholder="เงินเดือน"
-      inputmode="decimal">
+    <input type="text" id="salary" placeholder="เงินเดือน" inputmode="decimal">
     <select id="month"></select>
   </div>
 
   <!-- รวมรับ / รวมหัก -->
   <div class="row">
-    <input type="text" id="income" placeholder="รวมรับ"
-      inputmode="decimal">
-    <input type="text" id="deduct" placeholder="รวมหัก"
-      inputmode="decimal">
+    <input type="text" id="income" placeholder="รวมรับ" inputmode="decimal">
+    <input type="text" id="deduct" placeholder="รวมหัก" inputmode="decimal">
   </div>
 
   <!-- 1/3 / เหลือรับ -->
-  <div class="row">
-    <div class="result">1/3: <span id="oneThird">0</span></div>
-    <div class="result">เหลือรับ: <span id="remain">0</span></div>
+  <div class="row result-row">
+    <div class="result">1/3: <span id="oneThird">0.00</span></div>
+    <div class="result">เหลือรับ: <span id="remain">0.00</span></div>
   </div>
 </div>
 
@@ -90,7 +126,7 @@ button {
   </div>
 
   <div class="result">
-    เหลือรับใหม่: <span id="finalRemain">0</span>
+    เหลือรับใหม่: <span id="finalRemain">0.00</span>
   </div>
 </div>
 
@@ -107,6 +143,7 @@ const months = ["มกราคม","กุมภาพันธ์","มีน
 "กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
 
 const monthSelect = document.getElementById("month");
+
 months.forEach((m,i)=>{
   let opt = document.createElement("option");
   opt.value = i;
@@ -135,10 +172,9 @@ function getVal(id){
   return parseFloat(v) || 0;
 }
 
-// input listener
+// input event
 document.querySelectorAll("input").forEach(i=>{
   i.addEventListener("input", e=>{
-    let cursor = e.target.selectionStart;
     e.target.value = formatMoney(e.target.value);
     calculate();
   });
@@ -154,9 +190,14 @@ function calculate(){
   let remain = income - deduct;
   let finalRemain = remain - newDebt + oldDebt;
 
-  document.getElementById("oneThird").innerText = oneThird.toLocaleString(undefined,{minimumFractionDigits:2});
-  document.getElementById("remain").innerText = remain.toLocaleString(undefined,{minimumFractionDigits:2});
-  document.getElementById("finalRemain").innerText = finalRemain.toLocaleString(undefined,{minimumFractionDigits:2});
+  document.getElementById("oneThird").innerText =
+    oneThird.toLocaleString(undefined,{minimumFractionDigits:2});
+
+  document.getElementById("remain").innerText =
+    remain.toLocaleString(undefined,{minimumFractionDigits:2});
+
+  document.getElementById("finalRemain").innerText =
+    finalRemain.toLocaleString(undefined,{minimumFractionDigits:2});
 
   setResult("check1", finalRemain > oneThird);
   setResult("check2", finalRemain > 5000);
