@@ -6,10 +6,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-
+  
 <style>
+* { box-sizing: border-box; }
+
 body {
-  font-family:Kanit, sans-serif;
+  font-family: "Kanit", sans-serif;
   background:#f5f5f5;
 }
 
@@ -27,7 +29,7 @@ body {
 
 .title {
   text-align:center;
-  font-weight:bold;
+  font-weight:600;
   margin-bottom:8px;
 }
 
@@ -38,10 +40,9 @@ body {
 }
 
 input, select {
-  flex:1;
+  width:100%;
   padding:6px;
   font-size:14px;
-  width: 100%;
 }
 
 .row.result-row {
@@ -62,11 +63,25 @@ input, select {
 .result span {
   font-weight:bold;
 }
-  
-  box-sizing: border-box;
-}
+
 .pass { background:#8fda94; }
 .fail { background:#f3b4a6; }
+
+/* สีทั้งกล่อง */
+.box.red {
+  background: #f8caca;
+  border-color: #cc0000;
+}
+
+.box.orange {
+  background: #ffe0b3;
+  border-color: #ff9900;
+}
+
+.box.green {
+  background: #d4edda;
+  border-color: #28a745;
+}
 
 button {
   width:48%;
@@ -88,19 +103,16 @@ button {
 <div class="box">
   <div class="title">ข้อมูลรายได้</div>
 
-  <!-- เงินเดือน + เดือน -->
   <div class="row">
     <input type="text" id="salary" placeholder="เงินเดือน" inputmode="decimal">
     <select id="month"></select>
   </div>
 
-  <!-- รวมรับ / รวมหัก -->
   <div class="row">
     <input type="text" id="income" placeholder="รวมรับ" inputmode="decimal">
     <input type="text" id="deduct" placeholder="รวมหัก" inputmode="decimal">
   </div>
 
-  <!-- 1/3 / เหลือรับ -->
   <div class="row result-row">
     <div class="result">1/3: <span id="oneThird">0.00</span></div>
     <div class="result">เหลือรับ: <span id="remain">0.00</span></div>
@@ -117,7 +129,7 @@ button {
 </div>
 
 <!-- ส่วนที่ 3 -->
-<div class="box">
+<div class="box" id="resultBox">
   <div class="title">ผลลัพธ์</div>
 
   <div id="check1" class="result">
@@ -169,7 +181,7 @@ function formatMoney(val){
   });
 }
 
-// ดึงค่าเป็นตัวเลข
+// ดึงค่า
 function getVal(id){
   let v = document.getElementById(id).value.replace(/,/g,"");
   return parseFloat(v) || 0;
@@ -188,6 +200,7 @@ document.querySelectorAll("input").forEach(i=>{
 
 });
 
+// คำนวณ
 function calculate(){
   let income = getVal("income");
   let deduct = getVal("deduct");
@@ -207,10 +220,26 @@ function calculate(){
   document.getElementById("finalRemain").innerText =
     finalRemain.toLocaleString(undefined,{minimumFractionDigits:2});
 
-  setResult("check1", finalRemain > oneThird);
-  setResult("check2", finalRemain > 5000);
+  let pass1 = finalRemain > oneThird;
+  let pass2 = finalRemain > 5000;
+
+  setResult("check1", pass1);
+  setResult("check2", pass2);
+
+  // เปลี่ยนสีทั้งกล่อง
+  let box = document.getElementById("resultBox");
+  box.classList.remove("red","orange","green");
+
+  if(pass1 && pass2){
+    box.classList.add("green");
+  }else if(pass1 || pass2){
+    box.classList.add("orange");
+  }else{
+    box.classList.add("red");
+  }
 }
 
+// set result
 function setResult(id, pass){
   let el = document.getElementById(id);
   if(!el) return;
@@ -224,11 +253,13 @@ function setResult(id, pass){
   }
 }
 
+// reset
 function resetData(){
   document.querySelectorAll("input").forEach(i=>i.value="");
   calculate();
 }
 
+// save
 function saveData(){
   let data = {};
   document.querySelectorAll("input").forEach(i=>data[i.id]=i.value);
@@ -237,6 +268,7 @@ function saveData(){
   alert("บันทึกแล้ว");
 }
 
+// load
 window.onload = ()=>{
   let data = JSON.parse(localStorage.getItem("loanData")||"{}");
   document.querySelectorAll("input").forEach(i=>{
