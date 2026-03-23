@@ -177,10 +177,15 @@ function getVal(id){
 
 // input event
 document.querySelectorAll("input").forEach(i=>{
-  i.addEventListener("input", e=>{
-    e.target.value = formatMoney(e.target.value);
+
+  i.addEventListener("input", ()=>{
     calculate();
   });
+
+  i.addEventListener("blur", e=>{
+    e.target.value = formatMoney(e.target.value);
+  });
+
 });
 
 function calculate(){
