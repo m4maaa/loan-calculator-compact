@@ -213,9 +213,15 @@ function calculate(){
 
 function setResult(id, pass){
   let el = document.getElementById(id);
+  if(!el) return;
+
   el.classList.remove("pass","fail");
   el.classList.add(pass ? "pass":"fail");
-  el.querySelector("span").innerText = pass ? "/" : "X";
+
+  let span = el.querySelector("span");
+  if(span){
+    span.innerText = pass ? "/" : "X";
+  }
 }
 
 function resetData(){
